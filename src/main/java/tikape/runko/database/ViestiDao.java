@@ -37,7 +37,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         String teksti = rs.getString("teksti");
         String lahettaja = rs.getString("lahettaja");
         String aika = rs.getString("aika");
-        Integer lanka = rs.getInt("lanka");
+        String lanka = rs.getString("lanka");
 
         Viesti o = new Viesti(id, teksti, lahettaja, aika, lanka);
 
@@ -61,7 +61,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
             String teksti = rs.getString("teksti");
             String lahettaja = rs.getString("lahettaja");
             String aika = rs.getString("aika");
-            Integer lanka = rs.getInt("lanka");
+            String lanka = rs.getString("lanka");
 
             viestit.add(new Viesti(id, teksti, lahettaja, aika, lanka));
         }
@@ -76,6 +76,43 @@ public class ViestiDao implements Dao<Viesti, Integer> {
     @Override
     public void delete(Integer key) throws SQLException {
         // ei toteutettu
+    }
+    
+    public void lisaa(String teksti, String lahettaja, String aika, String lanka) throws Exception {
+        
+        Connection connection = database.getConnection();                        
+
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti(id, teksti, lahettaja, aika, lanka) VALUES(?, ?, ?, ?, ?)");
+        stmt.setObject(1, haeMaara() +1);
+        stmt.setObject(2, teksti);
+        stmt.setObject(3, lahettaja);
+        stmt.setObject(4, aika);
+        stmt.setObject(5, lanka);
+        stmt.execute();
+
+        stmt.close();
+        connection.close();
+    }
+    
+    public int haeMaara() throws Exception {
+        Connection connection = database.getConnection();                
+        PreparedStatement stmt = connection.prepareStatement("SELECT COUNT(*) AS mm FROM Viesti");
+
+        ResultSet rs = stmt.executeQuery();
+        int maara = 555;
+        
+        if (rs.next()){
+            maara = rs.getInt("mm");
+        } else {
+            maara = 1000;
+        }
+        
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return maara;
     }
 
 }

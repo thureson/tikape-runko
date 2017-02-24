@@ -15,9 +15,9 @@ public class Viesti {
     private String teksti;
     private String lahettaja;
     private String aika; // HUOM, mahdollisesti ei String
-    private int lanka;
+    private String lanka;
     
-    public Viesti(int id, String teksti, String lahettaja, String aika, int lanka){
+    public Viesti(int id, String teksti, String lahettaja, String aika, String lanka){
         this.id = id;
         this.teksti = teksti;
         this.lahettaja = lahettaja;
@@ -41,7 +41,7 @@ public class Viesti {
         return this.aika;
     }
     
-    public int getLanka(){
+    public String getLanka(){
         return this.lanka;
     }
 }

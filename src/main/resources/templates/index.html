@@ -2,19 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>Otsikko</title>
+        <title>Alueet</title>
         <meta charset="utf-8" />
     </head>
 
     <body>
         <h1>Forum! adhak</h1>
 
-        <p>Vaeltele aluettain ...</p>
+        <p>Vaeltele alueittain ...</p>
         <h1>ALUEET</h1>
         
         <ul>
             <li th:each="alue: ${alueet}">                
-                <a th:href="@{~/{id}(id=${alue.id})}" th:text="${alue.alue}">aluelinkki</a>
+                <a th:href="@{~/{alue}(alue=${alue.alue})}" th:text="${alue.alue}">aluelinkki</a>
             </li>
         </ul>
         

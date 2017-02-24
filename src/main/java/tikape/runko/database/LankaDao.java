@@ -35,7 +35,7 @@ public class LankaDao implements Dao<Lanka, Integer> {
 
         Integer id = rs.getInt("id");
         String otsikko = rs.getString("otsikko");        
-        Integer alue = rs.getInt("alue");
+        String alue = rs.getString("alue");
 
         Lanka o = new Lanka(id, otsikko, alue);
 
@@ -57,7 +57,7 @@ public class LankaDao implements Dao<Lanka, Integer> {
         while (rs.next()) {
             Integer id = rs.getInt("id");
             String otsikko = rs.getString("otsikko");        
-            Integer alue = rs.getInt("alue");
+            String alue = rs.getString("alue");
 
             langat.add(new Lanka(id, otsikko, alue));
         }
@@ -72,6 +72,41 @@ public class LankaDao implements Dao<Lanka, Integer> {
     @Override
     public void delete(Integer key) throws SQLException {
         // ei toteutettu
+    }
+    
+    public void lisaa(String otsikko, String alue) throws Exception {
+        
+        Connection connection = database.getConnection();                        
+
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Lanka(id, otsikko, alue) VALUES(?, ?, ?)");
+        stmt.setObject(1, haeMaara() +1);
+        stmt.setObject(2, otsikko);
+        stmt.setObject(3, alue);
+        stmt.execute();
+
+        stmt.close();
+        connection.close();
+    }
+    
+    public int haeMaara() throws Exception {
+        Connection connection = database.getConnection();                
+        PreparedStatement stmt = connection.prepareStatement("SELECT COUNT(*) AS mm FROM Lanka");
+
+        ResultSet rs = stmt.executeQuery();
+        int maara = 555;
+        
+        if (rs.next()){
+            maara = rs.getInt("mm");
+        } else {
+            maara = 1000;
+        }
+        
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return maara;
     }
 
 }

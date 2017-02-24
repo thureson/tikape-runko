@@ -13,9 +13,9 @@ public class Lanka {
     
     private int id;
     private String otsikko;
-    private int alue;
+    private String alue;
     
-    public Lanka(int id, String otsikko, int alue){
+    public Lanka(int id, String otsikko, String alue){
         this.id = id;
         this.otsikko = otsikko;
         this.alue = alue;
@@ -29,7 +29,7 @@ public class Lanka {
         return this.otsikko;
     }
     
-    public int getAlue(){
+    public String getAlue(){
         return this.alue;
     }
 }
