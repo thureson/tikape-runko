@@ -9,11 +9,19 @@
     <body>
         <h1 th:text="${alue}"></h1>
         
-        <ul>
-            <li th:each="lanka: ${langat}">                
-                <a th:href="@{~/{$alue}/{otsikko}(otsikko=${lanka.otsikko})}" th:text="${lanka.otsikko}">lankalinkki</a>
-            </li>
-        </ul>
+        <table style="width:100%">
+        <tr>
+          <th>Langat</th>
+          <th>Viestejä</th> 
+          <th>Uusin</th>
+        </tr>
+        <tr th:each="lanka: ${langat}">
+          <td><a th:href="@{~/{$alue}/{otsikko}(otsikko=${lanka.otsikko})}" th:text="${lanka.otsikko}">lankalinkki</a></td>
+          <td th:text="--määrä--"></td>
+          <td th:text="--aika--"></td>
+        </tr>
+
+      </table>
         
         <form method="POST">
             <input type="text" name="uusilanka"/>

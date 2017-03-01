@@ -9,14 +9,20 @@
     <body>
         <h1>Forum! adhak</h1>
 
-        <p>Vaeltele alueittain ...</p>
-        <h1>ALUEET</h1>
         
-        <ul>
-            <li th:each="alue: ${alueet}">                
-                <a th:href="@{~/{alue}(alue=${alue.alue})}" th:text="${alue.alue}">aluelinkki</a>
-            </li>
-        </ul>
+        <table style="width:100%">
+        <tr>
+          <th>Alueet</th>
+          <th>Viestejä</th> 
+          <th>Uusin</th>
+        </tr>
+        <tr th:each="alue: ${alueet}">
+          <td><a th:href="@{~/{alue}(alue=${alue.alue})}" th:text="${alue.alue}">aluelinkki</a></td>
+          <td th:text="--määrä--"></td>
+          <td th:text="--aika--"></td>
+        </tr>
+
+      </table>
         
         <form method="POST" action="/">
             <input type="text" name="uusialue"/>

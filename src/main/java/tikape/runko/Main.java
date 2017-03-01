@@ -56,6 +56,7 @@ public class Main {
         
         post("/:alue", (req, res) -> {
             lankaDao.lisaa(req.queryParams("uusilanka"), req.params(":alue"));
+            System.out.println("/" + req.params(":alue"));
             res.redirect("/" + req.params(":alue"));
             return "ok";
         });
