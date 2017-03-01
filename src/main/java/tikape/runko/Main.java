@@ -1,5 +1,6 @@
 package tikape.runko;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,12 +70,13 @@ public class Main {
                 }
             }
             map.put("viestit", langanViestit);
+            map.put("lanka", req.params(":lanka"));
 
             return new ModelAndView(map, "viestit");
         }, new ThymeleafTemplateEngine());
         
         post("/:alue/:lanka", (req, res) -> {
-            viestiDao.lisaa(req.queryParams("uusiviesti"), "lahettaja", "00:00", req.params(":lanka"));
+            viestiDao.lisaa(req.queryParams("uusiviesti"), req.queryParams("lahettaja"), LocalDateTime.now().toLocalTime().toString() + " " + LocalDateTime.now().toLocalDate().toString(), req.params(":lanka"));
             res.redirect("/" + req.params(":alue") + "/" + req.params(":lanka"));
             return "ok";
         });

@@ -7,19 +7,34 @@
     </head>
 
     <body>
-        <h1>Forum! adhak</h1>
-
-        <p>...</p>
-        <h1>Viestit</h1>
+        <h1 th:text="${lanka}"></h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Viesti</th>
+                    <th>Aika</th>
+                    <th>Lähettäjä</th>
+                </tr>
+                
+            </thead>
+            <tbody>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr th:each="viesti:${viestit}">
+                    <th th:text="${viesti.teksti}"></th>
+                    <th th:text="${viesti.aika}"></th>
+                    <th th:text="${viesti.lahettaja}"></th>
+                </tr>
+            </tbody>
+        </table>
         
-        <ul>
-            <li th:each="viesti: ${viestit}">                
-                <a th:text="${viesti.teksti}">Viesti</a>
-            </li>
-        </ul>
         
         <form method="POST">
             <input type="text" name="uusiviesti"/>
+            <input type="text" name="lahettaja" value="Poster"/>
             <input type="submit" value="Uusi viesti"/>
         </form>
         
