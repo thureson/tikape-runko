@@ -18,7 +18,7 @@
         </tr>
         <tr th:each="alue: ${alueet}">
           <td><a th:href="@{~/{alue}(alue=${alue.alue})}" th:text="${alue.alue}">aluelinkki</a></td>
-          <td th:text="--määrä--"></td>
+          <td th:text="${alue.viesteja}">maara</td>
           <td th:text="--aika--"></td>
         </tr>
 

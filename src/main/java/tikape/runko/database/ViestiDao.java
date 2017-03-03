@@ -38,8 +38,9 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         String lahettaja = rs.getString("lahettaja");
         String aika = rs.getString("aika");
         String lanka = rs.getString("lanka");
+        String alue = rs.getString("alue");
 
-        Viesti o = new Viesti(id, teksti, lahettaja, aika, lanka);
+        Viesti o = new Viesti(id, teksti, lahettaja, aika, lanka, alue);
 
         rs.close();
         stmt.close();
@@ -62,8 +63,9 @@ public class ViestiDao implements Dao<Viesti, Integer> {
             String lahettaja = rs.getString("lahettaja");
             String aika = rs.getString("aika");
             String lanka = rs.getString("lanka");
+            String alue = rs.getString("alue");
 
-            viestit.add(new Viesti(id, teksti, lahettaja, aika, lanka));
+            viestit.add(new Viesti(id, teksti, lahettaja, aika, lanka, alue));
         }
 
         rs.close();
@@ -78,16 +80,17 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         // ei toteutettu
     }
     
-    public void lisaa(String teksti, String lahettaja, String aika, String lanka) throws Exception {
+    public void lisaa(String teksti, String lahettaja, String aika, String lanka, String alue) throws Exception {
         
         Connection connection = database.getConnection();                        
 
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti(id, teksti, lahettaja, aika, lanka) VALUES(?, ?, ?, ?, ?)");
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti(id, teksti, lahettaja, aika, lanka, alue) VALUES(?, ?, ?, ?, ?, ?)");
         stmt.setObject(1, haeMaara() +1);
         stmt.setObject(2, teksti);
         stmt.setObject(3, lahettaja);
         stmt.setObject(4, aika);
         stmt.setObject(5, lanka);
+        stmt.setObject(6, alue);
         stmt.execute();
 
         stmt.close();

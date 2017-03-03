@@ -36,8 +36,9 @@ public class AlueDao implements Dao<Alue, Integer> {
 
         Integer id = rs.getInt("id");        
         String alue = rs.getString("alue");
+        Integer mr = rs.getInt("mr");
 
-        Alue o = new Alue(id, alue);
+        Alue o = new Alue(id, alue, mr);
 
         rs.close();
         stmt.close();
@@ -57,8 +58,9 @@ public class AlueDao implements Dao<Alue, Integer> {
         while (rs.next()) {
             Integer id = rs.getInt("id");     
             String alue = rs.getString("alue");
-
-            alueet.add(new Alue(id, alue));
+            Integer mr = rs.getInt("mr");
+            
+            alueet.add(new Alue(id, alue, mr));
         }
 
         rs.close();
@@ -73,13 +75,14 @@ public class AlueDao implements Dao<Alue, Integer> {
         // ei toteutettu
     }
     
-    public void lisaa(String nimi) throws Exception {
+    public void lisaa(String nimi, int mr) throws Exception {
         
         Connection connection = database.getConnection();                        
 
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Alue(id, alue) VALUES(?, ?)");
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Alue(id, alue, mr) VALUES(?, ?, ?)");
         stmt.setObject(1, haeMaara());
         stmt.setObject(2, nimi);
+        stmt.setObject(3, mr);
         stmt.execute();
 
         stmt.close();

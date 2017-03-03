@@ -13,10 +13,12 @@ public class Alue {
     
     private int id;
     private String alue;
+    private int viesteja;
     
-    public Alue(int id, String alue){
+    public Alue(int id, String alue, int viesteja){
         this.id = id;
         this.alue = alue;
+        this.viesteja = viesteja;
     }
     
     public int getId(){
@@ -26,6 +28,12 @@ public class Alue {
     public String getAlue(){
         return this.alue;
     }
+    
+    public int getViesteja(){
+        return this.viesteja;
+    }
+    
+    
     
 //    mby toString()
     

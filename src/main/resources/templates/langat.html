@@ -16,8 +16,8 @@
           <th>Uusin</th>
         </tr>
         <tr th:each="lanka: ${langat}">
-          <td><a th:href="@{~/{$alue}/{otsikko}(otsikko=${lanka.otsikko})}" th:text="${lanka.otsikko}">lankalinkki</a></td>
-          <td th:text="--määrä--"></td>
+          <td><a th:href="@{~/{alue}(alue=${alue.alue})/{otsikko}(otsikko=${lanka.otsikko})}" th:text="${lanka.otsikko}">lankalinkki</a></td>
+          <td th:text="${lanka.mr}">maarat</td>
           <td th:text="--aika--"></td>
         </tr>
 

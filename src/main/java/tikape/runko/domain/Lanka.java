@@ -14,11 +14,13 @@ public class Lanka {
     private int id;
     private String otsikko;
     private String alue;
+    private int mr;
     
-    public Lanka(int id, String otsikko, String alue){
+    public Lanka(int id, String otsikko, String alue, int mr){
         this.id = id;
         this.otsikko = otsikko;
         this.alue = alue;
+        this.mr = mr;
     }
     
     public int getId(){
@@ -31,5 +33,9 @@ public class Lanka {
     
     public String getAlue(){
         return this.alue;
+    }
+    
+    public int getMr(){
+        return this.mr;
     }
 }

@@ -16,13 +16,15 @@ public class Viesti {
     private String lahettaja;
     private String aika; // HUOM, mahdollisesti ei String
     private String lanka;
+    private String alue;
     
-    public Viesti(int id, String teksti, String lahettaja, String aika, String lanka){
+    public Viesti(int id, String teksti, String lahettaja, String aika, String lanka, String alue){
         this.id = id;
         this.teksti = teksti;
         this.lahettaja = lahettaja;
         this.aika = aika;
         this.lanka = lanka;
+        this.alue = alue;
     }
     
     public int getId(){
@@ -43,5 +45,9 @@ public class Viesti {
     
     public String getLanka(){
         return this.lanka;
+    }
+    
+    public String getAlue(){
+        return this.alue;
     }
 }
