@@ -9,11 +9,11 @@
     <body>
         <div>
             <a th:href="@{~/{alue} (alue=${alue})}" th:text="Päivitä"></a>
-            <a th:href="@{~/}" th:text="Alueet"></a>        
+            <a th:href="@{~/}" th:text="Alueet"></a>
+            <a th:text="${alue}"></a>
         </div>
         
-        
-        <h1 th:text="${alue}"></h1>
+        <p> </p>
         
         <table style="width:100%" align="left">
         <tr>

@@ -7,37 +7,31 @@
     </head>
 
     <body>
+   
         <div>
             <a th:href="@{~/{alue}/{otsikko} (alue=${alue}, otsikko=${lanka})}" th:text="Päivitä"></a>
             <a th:href="@{~/}" th:text="Alueet"></a>
             <a th:href="@{~/{alue} (alue=${alue})}" th:text="${alue}"></a>
+            <a th:text="${lanka}"></a>
         </div>
         
-        <h1 th:text="${lanka}"></h1>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Viesti</th>
-                    <th>Lähettäjä</th>
-                    <th>Aika</th>
-                </tr>
-                
-            </thead>
-            <tbody>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                <tr th:each="viesti:${viestit}">
-                    <th th:text="${viesti.teksti}"></th>
-                    <th th:text="${viesti.lahettaja}"></th>
-                    <th th:text="${viesti.aika}"></th>
-                </tr>
-            </tbody>
+        <p> </p>
+        
+        <table style="width:100%" align="left">
+            <tr>
+              <td><b>Viesti</b></td>
+              <td><b>Lähettäjä</b></td> 
+              <td><b>Aika</b></td>
+            </tr>
+            
+            <tr th:each="viesti:${viestit}">
+                <td th:text="${viesti.teksti}"></td>
+                <td th:text="${viesti.lahettaja}"></td>
+                <td th:text="${viesti.aika}"></td>
+            </tr>
+
         </table>
-        
-        
+                
         <form method="POST">
             <input type="text" name="uusiviesti"/>
             <input type="text" name="lahettaja" value="Default"/>
