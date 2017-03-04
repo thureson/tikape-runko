@@ -72,6 +72,30 @@ public class LankaDao implements Dao<Lanka, Integer> {
 
         return langat;
     }
+    
+    public List<Lanka> findAllByAika() throws SQLException {
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Lanka ORDER BY aika DESC");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Lanka> langat = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            String otsikko = rs.getString("otsikko");        
+            String alue = rs.getString("alue");
+            Integer maara = rs.getInt("maara");
+            String aika = rs.getString("aika");
+            
+            langat.add(new Lanka(id, otsikko, alue, maara, aika));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return langat;
+    }
 
     @Override
     public void delete(Integer key) throws SQLException {

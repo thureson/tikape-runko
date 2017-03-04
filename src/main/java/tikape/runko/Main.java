@@ -28,13 +28,13 @@ public class Main {
 
         get("/", (req, res) -> {
             HashMap map = new HashMap<>();
-            map.put("alueet", alueDao.findAll());
+            map.put("alueet", alueDao.findAllByTime());
 
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
         
-        post("/", (req, res) -> {
-            if (!alueDao.sisaltaa(req.queryParams("uusialue"))){
+        post("/", (req, res) -> {   //teksti <= 30
+            if (!alueDao.sisaltaa(req.queryParams("uusialue")) && req.queryParams("uusialue").length() <= 30){
                 alueDao.lisaa(req.queryParams("uusialue"), 0, "-");
                 res.redirect("/");
                 return "ok";
@@ -46,7 +46,7 @@ public class Main {
 
         get("/:alue", (req, res) -> {
             HashMap map = new HashMap<>();
-            List<Lanka> langat = lankaDao.findAll();
+            List<Lanka> langat = lankaDao.findAllByAika();
             List<Lanka> alueenLangat = new ArrayList<>();
             for (Lanka kk : langat){
                 if (kk.getAlue().equals(req.params(":alue"))){
@@ -59,8 +59,8 @@ public class Main {
             return new ModelAndView(map, "langat");
         }, new ThymeleafTemplateEngine());
         
-        post("/:alue", (req, res) -> {
-            if (!lankaDao.sisaltaa(req.queryParams("uusilanka"), req.params(":alue"))){
+        post("/:alue", (req, res) -> {    // teksti <= 30
+            if (!lankaDao.sisaltaa(req.queryParams("uusilanka"), req.params(":alue")) && req.queryParams("uusilanka").length() <= 30){
                 lankaDao.lisaa(req.queryParams("uusilanka"), req.params(":alue"), 0, "-");
                 res.redirect("/" + req.params(":alue"));
                 return "ok";
@@ -88,12 +88,17 @@ public class Main {
             return new ModelAndView(map, "viestit");
         }, new ThymeleafTemplateEngine());
         
-        post("/:alue/:lanka", (req, res) -> {
-            viestiDao.lisaa(req.queryParams("uusiviesti"), req.queryParams("lahettaja"), LocalDateTime.now().toLocalTime().toString() + " " + LocalDateTime.now().toLocalDate().toString(), req.params(":lanka"), req.params(":alue"));
-            lankaDao.paivita(req.params(":lanka"), req.params(":alue"));
-            alueDao.paivita(req.params(":alue"));            
-            res.redirect("/" + req.params(":alue") + "/" + req.params(":lanka"));
-            return "ok";
+        post("/:alue/:lanka", (req, res) -> {   // teksti <= 30 ja lahettaja <= 15 
+            if (req.queryParams("uusiviesti").length() <= 30 && req.queryParams("lahettaja").length() <= 15){
+                viestiDao.lisaa(req.queryParams("uusiviesti"), req.queryParams("lahettaja"), LocalDateTime.now().toLocalDate().toString() + " | " + LocalDateTime.now().toLocalTime().toString().subSequence(0, 8), req.params(":lanka"), req.params(":alue"));
+                lankaDao.paivita(req.params(":lanka"), req.params(":alue"));
+                alueDao.paivita(req.params(":alue"));  
+                res.redirect("/" + req.params(":alue") + "/" + req.params(":lanka"));
+                return "ok";
+            } else {
+                res.redirect("/" + req.params(":alue") + "/" + req.params(":lanka"));
+                return "ok";
+            }  
         });
     }
 }

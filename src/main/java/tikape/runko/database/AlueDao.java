@@ -71,6 +71,29 @@ public class AlueDao implements Dao<Alue, Integer> {
 
         return alueet;
     }
+    
+    public List<Alue> findAllByTime() throws SQLException {
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Alue ORDER BY time DESC");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Alue> alueet = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");     
+            String alue = rs.getString("alue");
+            Integer mr = rs.getInt("mr");
+            String time = rs.getString("time");
+            
+            alueet.add(new Alue(id, alue, mr, time));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return alueet;
+    }
 
     @Override
     public void delete(Integer key) throws SQLException {
