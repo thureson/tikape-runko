@@ -36,9 +36,10 @@ public class LankaDao implements Dao<Lanka, Integer> {
         Integer id = rs.getInt("id");
         String otsikko = rs.getString("otsikko");        
         String alue = rs.getString("alue");
-        Integer viesteja = rs.getInt("viesteja");
+        Integer maara = rs.getInt("maara");
+        String aika = rs.getString("aika");
 
-        Lanka o = new Lanka(id, otsikko, alue, viesteja);
+        Lanka o = new Lanka(id, otsikko, alue, maara, aika);
 
         rs.close();
         stmt.close();
@@ -59,9 +60,10 @@ public class LankaDao implements Dao<Lanka, Integer> {
             Integer id = rs.getInt("id");
             String otsikko = rs.getString("otsikko");        
             String alue = rs.getString("alue");
-            Integer viesteja = rs.getInt("viesteja");
-
-            langat.add(new Lanka(id, otsikko, alue, viesteja));
+            Integer maara = rs.getInt("maara");
+            String aika = rs.getString("aika");
+            
+            langat.add(new Lanka(id, otsikko, alue, maara, aika));
         }
 
         rs.close();
@@ -73,18 +75,26 @@ public class LankaDao implements Dao<Lanka, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        // ei toteutettu
+        Connection connection = database.getConnection();                        
+
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Lanka WHERE id = ?");
+        stmt.setObject(1, key);
+        stmt.execute();
+
+        stmt.close();
+        connection.close();
     }
     
-    public void lisaa(String otsikko, String alue, int viesteja) throws Exception {
+    public void lisaa(String otsikko, String alue, int maara, String aika) throws Exception {
         
         Connection connection = database.getConnection();                        
 
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Lanka(id, otsikko, alue, viesteja) VALUES(?, ?, ?, ?)");
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Lanka(id, otsikko, alue, maara, aika) VALUES(?, ?, ?, ?, ?)");
         stmt.setObject(1, haeMaara() +1);
         stmt.setObject(2, otsikko);
         stmt.setObject(3, alue);
-        stmt.setObject(4, viesteja);
+        stmt.setObject(4, maara);
+        stmt.setObject(5, aika);
         stmt.execute();
 
         stmt.close();
@@ -112,29 +122,94 @@ public class LankaDao implements Dao<Lanka, Integer> {
         return maara;
     }
     
-    public Lanka etsiOtsikolla(String otsikkoo) throws SQLException {
+    public List<Lanka> etsiViestienMaara(String otsikkoo) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Lanka WHERE otsikko = ?");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti WHERE Lanka = ?");
         stmt.setObject(1, otsikkoo);
 
+        
+        
         ResultSet rs = stmt.executeQuery();
         boolean hasOne = rs.next();
         if (!hasOne) {
             return null;
         }
 
-        Integer id = rs.getInt("id");
-        String otsikko = rs.getString("otsikko");        
-        String alue = rs.getString("alue");
-        Integer viesteja = rs.getInt("viesteja");
-        
-        Lanka o = new Lanka(id, otsikko, alue, viesteja);
+        List<Lanka> langat = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            String otsikko = rs.getString("otsikko");        
+            String alue = rs.getString("alue");
+            Integer maara = rs.getInt("maara");
+            String aika = rs.getString("aika");
+            
+            langat.add(new Lanka(id, otsikko, alue, maara, aika));
+        }
 
         rs.close();
         stmt.close();
         connection.close();
 
-        return o;
+        return langat;
+    }
+    
+    public void paivita(String title) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Lanka WHERE otsikko = ?");
+        stmt.setObject(1, title);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return;
+        }
+
+        Integer id = rs.getInt("id");
+        String otsikko = rs.getString("otsikko");        
+        String alue = rs.getString("alue");
+        
+        rs.close();
+        stmt.close();
+        connection.close();
+        
+        Connection connection2 = database.getConnection();
+        PreparedStatement stmt2 = connection2.prepareStatement("SELECT COUNT(*) AS ff FROM Viesti WHERE lanka = ?");
+        stmt2.setObject(1, title);
+
+        ResultSet rs2 = stmt2.executeQuery();
+        boolean hasOne2 = rs2.next();
+        if (!hasOne2) {
+            return;
+        }
+
+        Integer maara = rs2.getInt("ff");
+        
+        rs2.close();
+        stmt2.close();
+        connection2.close();
+        
+        Connection connection3 = database.getConnection();
+        PreparedStatement stmt3 = connection3.prepareStatement("SELECT aika FROM Viesti WHERE lanka = ? ORDER BY id DESC LIMIT 1");
+        stmt3.setObject(1, title);
+        
+        ResultSet rs3 = stmt3.executeQuery();
+        boolean hasOne3 = rs3.next();
+        if (!hasOne3) {
+            return;
+        }
+        
+        String aika = rs3.getString("aika");
+
+        rs3.close();
+        stmt3.close();
+        connection3.close();
+        
+        try {
+            this.delete(id);
+            this.lisaa(otsikko, alue, maara, aika);
+        } catch (Exception e){
+            System.out.println("lisaaBug");
+        }
     }
 
 }

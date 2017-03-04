@@ -9,16 +9,16 @@
     <body>
         <h1 th:text="${alue}"></h1>
         
-        <table style="width:100%">
+        <table style="width:100%" align="left">
         <tr>
-          <th>Langat</th>
-          <th>Viestejä</th> 
-          <th>Uusin</th>
+          <td><b>Langat</b></td>
+          <td><b>Viestejä</b></td> 
+          <td><b>Uusin</b></td>
         </tr>
         <tr th:each="lanka: ${langat}">
-          <td><a th:href="@{~/{alue}(alue=${alue.alue})/{otsikko}(otsikko=${lanka.otsikko})}" th:text="${lanka.otsikko}">lankalinkki</a></td>
-          <td th:text="${lanka.mr}">maarat</td>
-          <td th:text="--aika--"></td>
+          <td><a th:href="@{~/{alue}/{otsikko} (alue=${alue}, otsikko=${lanka.otsikko})}" th:text="${lanka.otsikko}">lankalinkki</a></td>
+          <td th:text="${lanka.maara}">maarat</td>
+          <td th:text="${lanka.aika}"></td>
         </tr>
 
       </table>

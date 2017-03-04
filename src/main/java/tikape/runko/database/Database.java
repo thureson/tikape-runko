@@ -40,8 +40,8 @@ public class Database {
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
         lista.add("CREATE TABLE Viesti(id, teksti, lahettaja, aika, lanka, alue);");
-        lista.add("CREATE TABLE Lanka(id, otsikko, alue, viesteja);");
-        lista.add("CREATE TABLE Alue(id, alue, mr);");
+        lista.add("CREATE TABLE Lanka(id, otsikko, alue, maara, aika);");
+        lista.add("CREATE TABLE Alue(id, alue, mr, time);");
 
         return lista;
     }

@@ -17,7 +17,7 @@ import tikape.runko.domain.Viesti;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Database database = new Database("jdbc:sqlite:test.db");
+        Database database = new Database("jdbc:sqlite:foruma.db");
         database.init();
 
 
@@ -34,7 +34,7 @@ public class Main {
         }, new ThymeleafTemplateEngine());
         
         post("/", (req, res) -> {
-            alueDao.lisaa(req.queryParams("uusialue"), 0);
+            alueDao.lisaa(req.queryParams("uusialue"), 0, "non");
             res.redirect("/");
             return "ok";
         });
@@ -55,8 +55,7 @@ public class Main {
         }, new ThymeleafTemplateEngine());
         
         post("/:alue", (req, res) -> {         
-            lankaDao.lisaa(req.queryParams("uusilanka"), req.params(":alue"), 0);
-            System.out.println("/" + req.params(":alue"));
+            lankaDao.lisaa(req.queryParams("uusilanka"), req.params(":alue"), 0, "non");
             res.redirect("/" + req.params(":alue"));
             return "ok";
         });
@@ -65,14 +64,11 @@ public class Main {
             HashMap map = new HashMap<>();
             List<Viesti> viestit = viestiDao.findAll();
             List<Viesti> langanViestit = new ArrayList<>();
-            Lanka haettu = lankaDao.etsiOtsikolla(req.params(":lanka"));
-            String alue = haettu.getAlue();
             for (Viesti kk : viestit){
-                if (kk.getLanka().equals(req.params(":lanka")) && kk.getAlue().equals(alue)){
+                if (kk.getLanka().equals(req.params(":lanka"))){
                     langanViestit.add(kk);
                 }
             }
-            map.put("alue2", alue);
             map.put("viestit", langanViestit);
             map.put("lanka", req.params(":lanka"));
             
@@ -81,10 +77,10 @@ public class Main {
         }, new ThymeleafTemplateEngine());
         
         post("/:alue/:lanka", (req, res) -> {
-            Lanka haettu = lankaDao.etsiOtsikolla(req.params(":lanka"));
-            String alue = haettu.getAlue();
-            viestiDao.lisaa(req.queryParams("uusiviesti"), req.queryParams("lahettaja"), LocalDateTime.now().toLocalTime().toString() + " " + LocalDateTime.now().toLocalDate().toString(), req.params(":lanka"), alue);
-            res.redirect("/" + alue + "/" + req.params(":lanka"));
+            viestiDao.lisaa(req.queryParams("uusiviesti"), req.queryParams("lahettaja"), LocalDateTime.now().toLocalTime().toString() + " " + LocalDateTime.now().toLocalDate().toString(), req.params(":lanka"), req.params(":alue"));
+            lankaDao.paivita(req.params(":lanka"));
+            alueDao.paivita(req.params(":alue"));            
+            res.redirect("/" + req.params(":alue") + "/" + req.params(":lanka"));
             return "ok";
         });
     }

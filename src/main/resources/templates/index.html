@@ -10,16 +10,16 @@
         <h1>Forum! adhak</h1>
 
         
-        <table style="width:100%">
+        <table style="width:100%" align="left">
         <tr>
-          <th>Alueet</th>
-          <th>Viestejä</th> 
-          <th>Uusin</th>
+            <td><b>Alueet</b></td>
+          <td><b>Viestejä</b></td> 
+          <td><b>Uusin</b></td>
         </tr>
         <tr th:each="alue: ${alueet}">
           <td><a th:href="@{~/{alue}(alue=${alue.alue})}" th:text="${alue.alue}">aluelinkki</a></td>
-          <td th:text="${alue.viesteja}">maara</td>
-          <td th:text="--aika--"></td>
+          <td th:text="${alue.mr}">maara</td>
+          <td th:text="${alue.time}"></td>
         </tr>
 
       </table>

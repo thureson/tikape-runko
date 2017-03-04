@@ -13,12 +13,14 @@ public class Alue {
     
     private int id;
     private String alue;
-    private int viesteja;
+    private int mr;
+    private String time;
     
-    public Alue(int id, String alue, int viesteja){
+    public Alue(int id, String alue, int mr, String time){
         this.id = id;
         this.alue = alue;
-        this.viesteja = viesteja;
+        this.mr = mr;
+        this.time = time;
     }
     
     public int getId(){
@@ -29,12 +31,11 @@ public class Alue {
         return this.alue;
     }
     
-    public int getViesteja(){
-        return this.viesteja;
+    public int getMr(){
+        return this.mr;
     }
     
-    
-    
-//    mby toString()
-    
+    public String getTime(){
+        return this.time;
+    }
 }
