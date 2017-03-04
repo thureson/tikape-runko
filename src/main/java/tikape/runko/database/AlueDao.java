@@ -159,7 +159,7 @@ public class AlueDao implements Dao<Alue, Integer> {
         connection2.close();
         
         Connection connection3 = database.getConnection();
-        PreparedStatement stmt3 = connection3.prepareStatement("SELECT aika FROM Lanka WHERE alue = ? ORDER BY id DESC LIMIT 1");
+        PreparedStatement stmt3 = connection3.prepareStatement("SELECT aika FROM Lanka WHERE alue = ? AND aika != '-' ORDER BY id DESC LIMIT 1");
         stmt3.setObject(1, title);
         
         ResultSet rs3 = stmt3.executeQuery();
@@ -181,6 +181,32 @@ public class AlueDao implements Dao<Alue, Integer> {
             System.out.println("lisaaAlueBug");
         }
 
+    }
+    
+    public boolean sisaltaa(String title) throws SQLException {
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT alue FROM Alue");
+
+        ResultSet rs = stmt.executeQuery();
+        List<String> alueet = new ArrayList<>();
+        while (rs.next()) {
+            String alue = rs.getString("alue");
+
+            
+            alueet.add(alue);
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        if (alueet.contains(title)){
+            return true;
+        } else {
+            return false;
+        }
+        
     }
 
 }

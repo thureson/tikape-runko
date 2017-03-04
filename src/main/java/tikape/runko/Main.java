@@ -17,7 +17,7 @@ import tikape.runko.domain.Viesti;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Database database = new Database("jdbc:sqlite:foruma.db");
+        Database database = new Database("jdbc:sqlite:forum.db");
         database.init();
 
 
@@ -34,9 +34,14 @@ public class Main {
         }, new ThymeleafTemplateEngine());
         
         post("/", (req, res) -> {
-            alueDao.lisaa(req.queryParams("uusialue"), 0, "non");
-            res.redirect("/");
-            return "ok";
+            if (!alueDao.sisaltaa(req.queryParams("uusialue"))){
+                alueDao.lisaa(req.queryParams("uusialue"), 0, "-");
+                res.redirect("/");
+                return "ok";
+            } else {
+                res.redirect("/");
+                return "ok";
+            }
         });
 
         get("/:alue", (req, res) -> {
@@ -54,23 +59,30 @@ public class Main {
             return new ModelAndView(map, "langat");
         }, new ThymeleafTemplateEngine());
         
-        post("/:alue", (req, res) -> {         
-            lankaDao.lisaa(req.queryParams("uusilanka"), req.params(":alue"), 0, "non");
-            res.redirect("/" + req.params(":alue"));
-            return "ok";
+        post("/:alue", (req, res) -> {
+            if (!lankaDao.sisaltaa(req.queryParams("uusilanka"), req.params(":alue"))){
+                lankaDao.lisaa(req.queryParams("uusilanka"), req.params(":alue"), 0, "-");
+                res.redirect("/" + req.params(":alue"));
+                return "ok";
+            } else {
+                res.redirect("/" + req.params(":alue"));
+                return "ok";
+            }
         });
         
         get("/:alue/:lanka", (req, res) -> {
             HashMap map = new HashMap<>();
             List<Viesti> viestit = viestiDao.findAll();
             List<Viesti> langanViestit = new ArrayList<>();
+            
             for (Viesti kk : viestit){
-                if (kk.getLanka().equals(req.params(":lanka"))){
+                if (kk.getLanka().equals(req.params(":lanka")) && kk.getAlue().equals(req.params(":alue"))){
                     langanViestit.add(kk);
                 }
             }
             map.put("viestit", langanViestit);
             map.put("lanka", req.params(":lanka"));
+            map.put("alue", req.params(":alue"));
             
 
             return new ModelAndView(map, "viestit");
@@ -78,7 +90,7 @@ public class Main {
         
         post("/:alue/:lanka", (req, res) -> {
             viestiDao.lisaa(req.queryParams("uusiviesti"), req.queryParams("lahettaja"), LocalDateTime.now().toLocalTime().toString() + " " + LocalDateTime.now().toLocalDate().toString(), req.params(":lanka"), req.params(":alue"));
-            lankaDao.paivita(req.params(":lanka"));
+            lankaDao.paivita(req.params(":lanka"), req.params(":alue"));
             alueDao.paivita(req.params(":alue"));            
             res.redirect("/" + req.params(":alue") + "/" + req.params(":lanka"));
             return "ok";

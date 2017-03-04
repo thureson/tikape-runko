@@ -86,11 +86,15 @@ public class LankaDao implements Dao<Lanka, Integer> {
     }
     
     public void lisaa(String otsikko, String alue, int maara, String aika) throws Exception {
+        this.lisaa(this.haeMaara()+1, otsikko, alue, maara, aika);
+    }
+    
+    public void lisaa(int id, String otsikko, String alue, int maara, String aika) throws Exception {
         
         Connection connection = database.getConnection();                        
 
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO Lanka(id, otsikko, alue, maara, aika) VALUES(?, ?, ?, ?, ?)");
-        stmt.setObject(1, haeMaara() +1);
+        stmt.setObject(1, id);
         stmt.setObject(2, otsikko);
         stmt.setObject(3, alue);
         stmt.setObject(4, maara);
@@ -153,10 +157,11 @@ public class LankaDao implements Dao<Lanka, Integer> {
         return langat;
     }
     
-    public void paivita(String title) throws SQLException {
+    public void paivita(String title, String aihe) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Lanka WHERE otsikko = ?");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Lanka WHERE otsikko = ? AND alue = ?");
         stmt.setObject(1, title);
+        stmt.setObject(2, aihe);
 
         ResultSet rs = stmt.executeQuery();
         boolean hasOne = rs.next();
@@ -173,8 +178,9 @@ public class LankaDao implements Dao<Lanka, Integer> {
         connection.close();
         
         Connection connection2 = database.getConnection();
-        PreparedStatement stmt2 = connection2.prepareStatement("SELECT COUNT(*) AS ff FROM Viesti WHERE lanka = ?");
+        PreparedStatement stmt2 = connection2.prepareStatement("SELECT COUNT(*) AS ff FROM Viesti WHERE lanka = ? AND alue = ?");
         stmt2.setObject(1, title);
+        stmt2.setObject(2, aihe);
 
         ResultSet rs2 = stmt2.executeQuery();
         boolean hasOne2 = rs2.next();
@@ -189,8 +195,9 @@ public class LankaDao implements Dao<Lanka, Integer> {
         connection2.close();
         
         Connection connection3 = database.getConnection();
-        PreparedStatement stmt3 = connection3.prepareStatement("SELECT aika FROM Viesti WHERE lanka = ? ORDER BY id DESC LIMIT 1");
+        PreparedStatement stmt3 = connection3.prepareStatement("SELECT aika FROM Viesti WHERE lanka = ? AND alue = ? ORDER BY id DESC LIMIT 1");
         stmt3.setObject(1, title);
+        stmt3.setObject(2, aihe);
         
         ResultSet rs3 = stmt3.executeQuery();
         boolean hasOne3 = rs3.next();
@@ -206,10 +213,37 @@ public class LankaDao implements Dao<Lanka, Integer> {
         
         try {
             this.delete(id);
-            this.lisaa(otsikko, alue, maara, aika);
+            this.lisaa(id, otsikko, alue, maara, aika);
         } catch (Exception e){
             System.out.println("lisaaBug");
         }
+    }
+    
+    public boolean sisaltaa(String title, String aihe) throws SQLException {
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT otsikko FROM Lanka WHERE alue = ?");
+        stmt.setObject(1, aihe);
+        
+        ResultSet rs = stmt.executeQuery();
+        List<String> langat = new ArrayList<>();
+        while (rs.next()) {
+            String lanka = rs.getString("otsikko");
+
+            
+            langat.add(lanka);
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        if (langat.contains(title)){
+            return true;
+        } else {
+            return false;
+        }
+        
     }
 
 }

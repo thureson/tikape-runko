@@ -7,13 +7,19 @@
     </head>
 
     <body>
+        <div>
+            <a th:href="@{~/{alue}/{otsikko} (alue=${alue}, otsikko=${lanka})}" th:text="Päivitä"></a>
+            <a th:href="@{~/}" th:text="Alueet"></a>
+            <a th:href="@{~/{alue} (alue=${alue})}" th:text="${alue}"></a>
+        </div>
+        
         <h1 th:text="${lanka}"></h1>
         <table border="1">
             <thead>
                 <tr>
                     <th>Viesti</th>
-                    <th>Aika</th>
                     <th>Lähettäjä</th>
+                    <th>Aika</th>
                 </tr>
                 
             </thead>
@@ -25,8 +31,8 @@
                 </tr>
                 <tr th:each="viesti:${viestit}">
                     <th th:text="${viesti.teksti}"></th>
-                    <th th:text="${viesti.aika}"></th>
                     <th th:text="${viesti.lahettaja}"></th>
+                    <th th:text="${viesti.aika}"></th>
                 </tr>
             </tbody>
         </table>
