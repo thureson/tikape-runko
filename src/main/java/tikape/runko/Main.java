@@ -28,14 +28,14 @@ public class Main {
 
         get("/", (req, res) -> {
             HashMap map = new HashMap<>();
-            map.put("alueet", alueDao.findAllByTime());
+            map.put("alueet", alueDao.findAllByName());
 
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
         
         post("/", (req, res) -> {   //teksti <= 30
             if (!alueDao.sisaltaa(req.queryParams("uusialue")) && req.queryParams("uusialue").length() <= 30){
-                alueDao.lisaa(req.queryParams("uusialue"), 0, "-");
+                alueDao.lisaa(req.queryParams("uusialue"), 0, LocalDateTime.now().toLocalDate().toString() + " | " + LocalDateTime.now().toLocalTime().toString().subSequence(0, 8));
                 res.redirect("/");
                 return "ok";
             } else {
@@ -46,7 +46,7 @@ public class Main {
 
         get("/:alue", (req, res) -> {
             HashMap map = new HashMap<>();
-            List<Lanka> langat = lankaDao.findAllByAika();
+            List<Lanka> langat = lankaDao.findTenByAika();
             List<Lanka> alueenLangat = new ArrayList<>();
             for (Lanka kk : langat){
                 if (kk.getAlue().equals(req.params(":alue"))){
@@ -61,7 +61,8 @@ public class Main {
         
         post("/:alue", (req, res) -> {    // teksti <= 30
             if (!lankaDao.sisaltaa(req.queryParams("uusilanka"), req.params(":alue")) && req.queryParams("uusilanka").length() <= 30){
-                lankaDao.lisaa(req.queryParams("uusilanka"), req.params(":alue"), 0, "-");
+                lankaDao.lisaa(req.queryParams("uusilanka"), req.params(":alue"), 0, LocalDateTime.now().toLocalDate().toString() + " | " + LocalDateTime.now().toLocalTime().toString().subSequence(0, 8));
+                alueDao.paivita(req.params(":alue"));
                 res.redirect("/" + req.params(":alue"));
                 return "ok";
             } else {
@@ -72,14 +73,35 @@ public class Main {
         
         get("/:alue/:lanka", (req, res) -> {
             HashMap map = new HashMap<>();
-            List<Viesti> viestit = viestiDao.findAll();
+//            List<Viesti> viestit = viestiDao.findAll();
             List<Viesti> langanViestit = new ArrayList<>();
-            
-            for (Viesti kk : viestit){
-                if (kk.getLanka().equals(req.params(":lanka")) && kk.getAlue().equals(req.params(":alue"))){
-                    langanViestit.add(kk);
+            try {
+                List<Viesti> viestit = viestiDao.findAllReverse();
+                int viesteja = Integer.parseInt(req.queryParams("sivu"));
+                for (Viesti kk : viestit){
+                    if (kk.getLanka().equals(req.params(":lanka")) && kk.getAlue().equals(req.params(":alue"))){
+                        langanViestit.add(kk);
+                        if (langanViestit.size() == viesteja){
+                            break;
+                        }
+                    }
                 }
+            } catch (Exception e){
+                List<Viesti> viestit = viestiDao.findAll();
+                System.out.println("ei sivu");
+                for (Viesti kk : viestit){
+                    if (kk.getLanka().equals(req.params(":lanka")) && kk.getAlue().equals(req.params(":alue"))){
+                        langanViestit.add(kk);
+                    }
+                }             
             }
+                    
+//            for (Viesti kk : viestit){
+//                if (kk.getLanka().equals(req.params(":lanka")) && kk.getAlue().equals(req.params(":alue"))){
+//                    langanViestit.add(kk);
+//                }
+//            }
+
             map.put("viestit", langanViestit);
             map.put("lanka", req.params(":lanka"));
             map.put("alue", req.params(":alue"));

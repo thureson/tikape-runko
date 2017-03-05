@@ -74,6 +74,56 @@ public class ViestiDao implements Dao<Viesti, Integer> {
 
         return viestit;
     }
+    
+    public List<Viesti> findAllReverse() throws SQLException {
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti ORDER BY id DESC");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Viesti> viestit = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            String teksti = rs.getString("teksti");
+            String lahettaja = rs.getString("lahettaja");
+            String aika = rs.getString("aika");
+            String lanka = rs.getString("lanka");
+            String alue = rs.getString("alue");
+
+            viestit.add(new Viesti(id, teksti, lahettaja, aika, lanka, alue));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return viestit;
+    }
+    
+    public List<Viesti> findTen() throws SQLException {
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Viesti> viestit = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            String teksti = rs.getString("teksti");
+            String lahettaja = rs.getString("lahettaja");
+            String aika = rs.getString("aika");
+            String lanka = rs.getString("lanka");
+            String alue = rs.getString("alue");
+
+            viestit.add(new Viesti(id, teksti, lahettaja, aika, lanka, alue));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return viestit;
+    }
 
     @Override
     public void delete(Integer key) throws SQLException {

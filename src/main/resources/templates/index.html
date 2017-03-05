@@ -17,8 +17,8 @@
         <table style="width:100%" align="left">
         <tr>
             <td><b>Alue</b></td>
-          <td><b>Viestejä</b></td> 
-          <td><b>Uusin</b></td>
+            <td><b>Viestejä</b></td> 
+            <td><b>Aika</b></td>
         </tr>
         <tr th:each="alue: ${alueet}">
           <td><a th:href="@{~/{alue}(alue=${alue.alue})}" th:text="${alue.alue}">aluelinkki</a></td>
@@ -32,6 +32,7 @@
             <input type="text" name="uusialue"/>
             <input type="submit" value="Uusi alue"/>
         </form>
+        
         
     </body>
 </html>

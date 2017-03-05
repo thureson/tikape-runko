@@ -94,6 +94,29 @@ public class AlueDao implements Dao<Alue, Integer> {
 
         return alueet;
     }
+    
+    public List<Alue> findAllByName() throws SQLException {
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Alue ORDER BY alue ASC");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Alue> alueet = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");     
+            String alue = rs.getString("alue");
+            Integer mr = rs.getInt("mr");
+            String time = rs.getString("time");
+            
+            alueet.add(new Alue(id, alue, mr, time));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return alueet;
+    }
 
     @Override
     public void delete(Integer key) throws SQLException {
@@ -182,7 +205,7 @@ public class AlueDao implements Dao<Alue, Integer> {
         connection2.close();
         
         Connection connection3 = database.getConnection();
-        PreparedStatement stmt3 = connection3.prepareStatement("SELECT aika FROM Lanka WHERE alue = ? AND aika != '-' ORDER BY id DESC LIMIT 1");
+        PreparedStatement stmt3 = connection3.prepareStatement("SELECT aika FROM Lanka WHERE alue = ? AND aika != '-' ORDER BY aika DESC LIMIT 1");
         stmt3.setObject(1, title);
         
         ResultSet rs3 = stmt3.executeQuery();

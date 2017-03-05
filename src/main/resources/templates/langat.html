@@ -19,7 +19,7 @@
         <tr>
           <td><b>Lanka</b></td>
           <td><b>Viestejä</b></td> 
-          <td><b>Uusin</b></td>
+          <td><b>Aika</b></td>
         </tr>
         <tr th:each="lanka: ${langat}">
           <td><a th:href="@{~/{alue}/{otsikko} (alue=${alue}, otsikko=${lanka.otsikko})}" th:text="${lanka.otsikko}">lankalinkki</a></td>
