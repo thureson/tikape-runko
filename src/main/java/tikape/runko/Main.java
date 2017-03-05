@@ -77,7 +77,7 @@ public class Main {
             List<Viesti> langanViestit = new ArrayList<>();
             try {
                 List<Viesti> viestit = viestiDao.findAllReverse();
-                int viesteja = Integer.parseInt(req.queryParams("sivu"));
+                int viesteja = Integer.parseInt(req.queryParams("viesteja"));
                 for (Viesti kk : viestit){
                     if (kk.getLanka().equals(req.params(":lanka")) && kk.getAlue().equals(req.params(":alue"))){
                         langanViestit.add(kk);
